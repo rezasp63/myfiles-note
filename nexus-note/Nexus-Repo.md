@@ -583,12 +583,12 @@ Login to the Nexus server terminal.
 **Install GPG (if not installed)**
 
 ```bash
-$ sudo apt update
-$ sudo apt install gnupg -y
+sudo apt update
+sudo apt install gnupg -y
 ```
 Generate New GPG Key
 ```bash
-$ gpg --full-generate-key
+gpg --full-generate-key
 ```
 Choose:
 
@@ -640,12 +640,12 @@ ABCDEF1234567890
 
 Export the private key in armored format:
 ```bash
-$ gpg --export-secret-key --armor ABCDEF1234567890 > nexus-private.key
+gpg --export-secret-key --armor ABCDEF1234567890 > nexus-private.key
 ```
 Check file:
 
 ```bash
-$ cat nexus-private.key
+cat nexus-private.key
 ```
 You must see:
 ```bash
@@ -658,7 +658,7 @@ Copy the entire content including BEGIN and END lines.
 - #### STEP 4 — Export Public Key (For Clients)
 
 ```bash
-$ gpg --export --armor ABCDEF1234567890 > nexus-public.key
+gpg --export --armor ABCDEF1234567890 > nexus-public.key
 ```
 
 Keep this file safe. It will be used on client machines.
@@ -811,9 +811,9 @@ Now we configure client cleanly.
 
 If repo uses self-signed certificate:
 ```bash
-$ echo | openssl s_client -connect repo.samen.com:443 -servername repo.samen.com 2>/dev/null | openssl x509 > repo.samen.com.crt
-$ sudo cp repo.samen.com.crt /usr/local/share/ca-certificates/
-$ sudo update-ca-certificates
+echo | openssl s_client -connect repo.samen.com:443 -servername repo.samen.com 2>/dev/null | openssl x509 > repo.samen.com.crt
+sudo cp repo.samen.com.crt /usr/local/share/ca-certificates/
+sudo update-ca-certificates
 ```
 
 If using valid certificate (Let's Encrypt) → skip this step.
@@ -824,19 +824,19 @@ If using valid certificate (Let's Encrypt) → skip this step.
 
 Then:
 ```bash
-$ sudo gpg --dearmor nexus-public.key
-$ sudo mv nexus-public.key.gpg /usr/share/keyrings/nexus-apt.gpg
+sudo gpg --dearmor nexus-public.key
+sudo mv nexus-public.key.gpg /usr/share/keyrings/nexus-apt.gpg
 ```
 
 Verify:
 ```bash
-$ gpg --show-keys /usr/share/keyrings/nexus-apt.gpg
+gpg --show-keys /usr/share/keyrings/nexus-apt.gpg
 ```
 3. Add Repository
 
 Create file:
 ```bash
-$ sudo nano /etc/apt/sources.list.d/nexus.list
+sudo nano /etc/apt/sources.list.d/nexus.list
 ```
 
 Add exactly this:
@@ -922,17 +922,17 @@ You must copy:
 After stopping Nexus:
 
 ```bash
-$ rsync -avz --progress /opt/sonatype-work/nexus3/ user@new-server:/opt/sonatype-work/nexus3/
+rsync -avz --progress /opt/sonatype-work/nexus3/ user@new-server:/opt/sonatype-work/nexus3/
 ```
 
 Then fix ownership:
 ```bash
-$ chown -R nexus:nexus /opt/sonatype-work/nexus3
+chown -R nexus:nexus /opt/sonatype-work/nexus3
 ```
 
 If you want, show me:
 ```bash
-$ ls /opt/sonatype-work/nexus3
+ls /opt/sonatype-work/nexus3
 ```
 
 and I will confirm everything is correct before you migrate.
@@ -945,25 +945,26 @@ This guarantees consistency.
 
 1️⃣ Stop Nexus
 ```bash
-$ systemctl stop nexus
+systemctl stop nexus
 ```
 
 or
 ```bash
-$ /opt/nexus/bin/nexus stop
+/opt/nexus/bin/nexus stop
 ```
 2️⃣ Backup the Entire Data Directory
 ```bash
-$ tar -czvf nexus-backup-$(date +%F).tar.gz -C /opt/sonatype-work nexus3
+tar -czvf nexus-backup-$(date +%F).tar.gz -C /opt/sonatype-work nexus3
 ```
 
 OR using rsync:
 ```bash
-$ rsync -avz /opt/sonatype-work/nexus3 /backup/
+rsync -avz /opt/sonatype-work/nexus3 /backup/
 ```
 3️⃣ Start Nexus
 ```bash
-$ systemctl start nexus
+systemctl start nexus
 ```
+
 
 
